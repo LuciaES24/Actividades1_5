@@ -177,14 +177,14 @@ fun Actividad4() {
         horizontalAlignment = Alignment.CenterHorizontally) {
         TextField(
             value = myVal,
-            onValueChange = { myVal = cambiarComa( it ) },
+            onValueChange = { myVal = puntos(cambiarComa( it )) },
             label = { Text(text = "Importe") }
         )
     }
 }
 
 fun cambiarComa(valor:String):String{
-    var resultado = puntos(valor)
+    var resultado = ""
     if (valor.contains(",")){
         resultado = valor.replace(",",".")
     }else{
@@ -194,24 +194,17 @@ fun cambiarComa(valor:String):String{
 }
 
 fun puntos(valor:String):String{
-    var posicion = 0
+    val posicion = valor.indexOf(".")
     var resultado = ""
-    for (i in 0..valor.length-1){
-        if (valor[i].toString()==","){
-            resultado+=valor[i]
-            posicion = i
-            break
-        }else{
-            resultado+=valor[i]
+
+    for (i in 0..valor.length-1) {
+        if (valor[i].toString() == "." && i != posicion) {
+            valor.drop(i)
+        } else {
+            resultado += valor[i]
         }
     }
-    val cadena = valor.substring(posicion,valor.length)
-    for (i in posicion..cadena.length-1){
-        if (valor[i].toString()==","){
-            cadena.replace(",","")
-        }
-    }
-    resultado+=cadena
+
     return resultado
 }
 
@@ -227,17 +220,18 @@ A nivel funcional no permitas que se introduzcan caracteres que invaliden un nú
 @Composable
 fun Actividad5() {
     var myVal by rememberSaveable { mutableStateOf("") }
+
     Column(Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally) {
         OutlinedTextField(
             modifier = Modifier.padding(15.dp),
             value = myVal,
-            onValueChange = { myVal = comprobarVal(it) },
+            onValueChange = { myVal = puntos(cambiarComa(comprobarVal(it))) },
             label = { Text(text = "Importe") },
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = Color.Cyan,
-                unfocusedBorderColor = Color.Black
+                unfocusedBorderColor = Color.Blue
             )
         )
     }
@@ -245,20 +239,14 @@ fun Actividad5() {
 
 fun comprobarVal(valor:String):String{
     var resultado = ""
-    var letras = ""
+
     for (i in 0..valor.length-1){
-        if (valor[i]>='a' && valor[i]<='z'){
-            letras+=valor[i]
+        if (valor[i].toString()>="a" && valor[i].toString()<="z"){
+            valor.drop(i)
         }else{
-            resultado+=valor[i]
+            resultado += valor[i]
         }
     }
 
-    if (valor.contains(",")){
-        resultado = valor.replace(",",".")
-    }else{
-        resultado = valor
-    }
-    
     return resultado
 }
